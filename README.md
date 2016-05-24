@@ -1,27 +1,23 @@
-package com.my;
+#原理
+RecyclerView嵌套RecyclerView的条目，项目中可能会经常有这样的需求，但是我们将子条目设置为RecyclerView之后，却显示不出来。自己试了很久，终于找到了原因：**必须先设置子RecylcerView的高度**。你要花精力确定出子RecyclerView里面条目的高度，然后从而确定子RecyclerView的高度，设置给子RecylcerView，这样做RecyclerView就可以正确显示出子ReclyclerView。
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+#代码
+**为了方便大家阅读，外层RecyclerView我就不加任何修饰，就是RecyclerView，RecyclerView条目我会称它为子RecyclerView**
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-
-    private RecyclerView recylcerview;
-
-    private DataInfor data;
-
-    private int screenWidth;
-
-    @Override
+下面开始来看代码：：
+首页布局就是一个竖直排列的RecyclerView
+```
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recylcerview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+```
+    
+    
+接下来在MainActivity对该布局进行初始化,然后制造一些假数据
+```    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -31,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+ 
     private  void basicParamInit() {
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -55,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         data.gridData = data.horizontalData = data.verticalData = resourceList;
 
     }
-
+    
     private void initRecyclerView() {
         recylcerview = (RecyclerView) findViewById(R.id.recylcerview);
 
@@ -65,18 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
         recylcerview.setAdapter(new RecyclerViewAdapter());
     }
-
-    /**
-     * unit dip to px
-     */
-    private  int dip2px(float dip) {
-        float v = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,getResources().getDisplayMetrics());
-        return (int) (v + 0.5f);
-    }
+```
 
 
-
-    private class RecyclerViewAdapter extends RecyclerView.Adapter<BaseHolder>{
+接下来看看RecyclerView的Adapter:
+```
+private class RecyclerViewAdapter extends RecyclerView.Adapter<BaseHolder>{
         private final int HORIZONTAL_VIEW = 1000;
         private final int VERTICAL_VIEW = 1001;
         private final int GRID_VIEW = 1002;
@@ -118,17 +108,12 @@ public class MainActivity extends AppCompatActivity {
             return VERTICAL_VIEW;
         }
     }
+```
 
+可以看出，我们一共有三种条目类型，第一种是水平滑动的子RecyclerView，第二种是GridView形的子RecyclerView，第三种就是正常的子条目，根据viewType来返回不同的ViewHolder，到这里应该都没什么问题。
 
-
-
-
-
-    //----------------------Holder----------------------------
-
-    /**
-     * 嵌套的水平RecyclerView
-     */
+接下来就是各个类型的ViewHolder了，在Holder当中，我们要**计算条目的高度然后设置给子RecyclerView**
+```
     private class HorizontalViewHolder extends BaseHolder<List<Integer>>{
         private RecyclerView hor_recyclerview;
 
@@ -169,12 +154,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+```
 
-
-    /**
-     * GridView形状的RecyclerView
-     */
-    private class GridViewHolder extends BaseHolder<List<Integer>>{
+水平的子RecyclerView的高度还是比较容易计算的，毕竟只有一行，高度相对来说是固定的。但是像GridView的高度是动态的，根据条目数量的不同，可能会有多行，所以我们需要先计算行数，然后每行的高度*行数才是子RecyclerView的高度
+```
+private class GridViewHolder extends BaseHolder<List<Integer>>{
 
         private RecyclerView item_recyclerview;
 
@@ -231,28 +215,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+```
+
+其他代码我就不贴了，想要看源码的可以直接下载。
+总体来说，RecyclerView嵌套RecyclerView是很简单的，而且也相当好用，希望这个demo可以给大家一些灵感。
 
 
 
-    /**
-     *  通用子条目hodler
-     */
-    private class ItemViewHolder extends BaseHolder<Integer>{
 
-        private ImageView imageview_item;
 
-        public ItemViewHolder(int viewId, ViewGroup parent, int viewType) {
-            super(viewId, parent, viewType);
-            imageview_item = (ImageView) itemView.findViewById(R.id.imageview_item);
-            ViewGroup.LayoutParams layoutParams = imageview_item.getLayoutParams();
-            layoutParams.width = layoutParams.height = screenWidth / 3;
-            imageview_item.setLayoutParams(layoutParams);
-        }
-
-        @Override
-        public void refreshData(Integer data, int position) {
-            super.refreshData(data, position);
-            imageview_item.setBackgroundResource(data);
-        }
-    }
-}
+>有任何问题都可以联系我：mengyuanzz@126.com
