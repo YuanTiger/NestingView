@@ -2,11 +2,12 @@ package com.my;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ public class MainActivity extends AppCompatActivity {
 
     private DataInfor data;
 
+    private int screenWidth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        basicParamInit();
         initData();
         initRecyclerView();
     }
@@ -67,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
         public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType){
                 case HORIZONTAL_VIEW:
-                    return new HorizontalViewHolder(R.layout.item_horizontal,parent,viewType);
+                    return new HorizontalViewHolder(R.layout.item_recyclerview,parent,viewType);
+                case GRID_VIEW:
+                    return new GridViewHolder(R.layout.item_recyclerview,parent,viewType);
+                case VERTICAL_VIEW:
+                    return new ItemViewHolder(R.layout.item_x2_imageview,parent,viewType);
             }
             return null;
         }
@@ -76,21 +83,24 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(BaseHolder holder, int position) {
             if(holder instanceof HorizontalViewHolder){
                 holder.refreshData(data.horizontalData,position);
+            }else if(holder instanceof GridViewHolder){
+                holder.refreshData(data.gridData,position);
+            }else if(holder instanceof ItemViewHolder){
+                holder.refreshData(data.verticalData.get(position - 2),position - 2);
             }
 
         }
 
         @Override
         public int getItemCount() {
-            return 1;
+            return 2 + data.verticalData.size();
         }
 
         @Override
         public int getItemViewType(int position) {
             if(position == 0) return HORIZONTAL_VIEW;
             if(position == 1) return GRID_VIEW;
-            if(position == 2) return VERTICAL_VIEW;
-            return 0;
+            return VERTICAL_VIEW;
         }
     }
 
@@ -101,6 +111,18 @@ public class MainActivity extends AppCompatActivity {
         float v = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,getResources().getDisplayMetrics());
         return (int) (v + 0.5f);
     }
+
+    /**
+     * get Screen data
+     */
+    private  void basicParamInit() {
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+
+        screenWidth = metric.widthPixels;
+
+    }
+
 
 
 
@@ -116,16 +138,18 @@ public class MainActivity extends AppCompatActivity {
 
         public HorizontalViewHolder(int viewId, ViewGroup parent, int viewType) {
             super(viewId, parent, viewType);
-            hor_recyclerview = (RecyclerView) itemView.findViewById(R.id.hor_recyclerview);
+            hor_recyclerview = (RecyclerView) itemView.findViewById(R.id.item_recyclerview);
         }
 
         @Override
         public void refreshData(List<Integer> data, int position) {
             this.data = data;
             ViewGroup.LayoutParams layoutParams = hor_recyclerview.getLayoutParams();
-            layoutParams.height = dip2px(120);
+            //高度等于＝条目的高度＋ 10dp的间距 ＋ 10dp（为了让条目居中）
+            layoutParams.height = screenWidth/3 + dip2px(20);
             hor_recyclerview.setLayoutParams(layoutParams);
             hor_recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL,false));
+            hor_recyclerview.setBackgroundResource(R.color.colorAccent);
             hor_recyclerview.setAdapter(new HorizontalAdapter());
         }
 
@@ -133,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new HorizontalItemViewHolder(R.layout.item_x2_imageview,parent,viewType);
+                return new ItemViewHolder(R.layout.item_x2_imageview,parent,viewType);
             }
 
             @Override
@@ -147,22 +171,93 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        private class HorizontalItemViewHolder extends BaseHolder<Integer>{
 
-            private ImageView imageview_item;
-
-            public HorizontalItemViewHolder(int viewId, ViewGroup parent, int viewType) {
-                super(viewId, parent, viewType);
-                imageview_item = (ImageView) itemView.findViewById(R.id.imageview_item);
-            }
-
-            @Override
-            public void refreshData(Integer data, int position) {
-                super.refreshData(data, position);
-                imageview_item.setBackgroundResource(data);
-            }
-        }
 
     }
 
+
+    /**
+     * GridView形状的RecyclerView
+     */
+    private class GridViewHolder extends BaseHolder<List<Integer>>{
+
+        private RecyclerView item_recyclerview;
+
+        private final int ONE_LINE_SHOW_NUMBER = 3;
+
+        private List<Integer> data;
+
+        public GridViewHolder(int viewId, ViewGroup parent, int viewType) {
+            super(viewId, parent, viewType);
+            item_recyclerview = (RecyclerView) itemView.findViewById(R.id.item_recyclerview);
+
+        }
+
+        @Override
+        public void refreshData(List<Integer> data, int position) {
+            super.refreshData(data, position);
+            this.data = data;
+            //每行显示3个，水平显示
+            item_recyclerview.setLayoutManager(new GridLayoutManager(MainActivity.this,ONE_LINE_SHOW_NUMBER,LinearLayoutManager.HORIZONTAL,false));
+
+            ViewGroup.LayoutParams layoutParams = item_recyclerview.getLayoutParams();
+            //计算行数
+            int lineNumber = data.size()%ONE_LINE_SHOW_NUMBER==0? data.size()/ONE_LINE_SHOW_NUMBER:data.size()/ONE_LINE_SHOW_NUMBER +1;
+            //计算高度=行数＊每行的高度 ＋(行数－1)＊10dp的margin ＋ 10dp（为了居中）
+            //因为每行显示3个条目，为了保持正方形，那么高度应该是也是宽度/3
+            //高度的计算需要自己好好理解，否则会产生嵌套recyclerView可以滑动的现象
+            layoutParams.height = lineNumber *(screenWidth/3) + (lineNumber-1)*dip2px(10) + dip2px(10);
+
+            item_recyclerview.setLayoutParams(layoutParams);
+
+            item_recyclerview.setBackgroundResource(R.color.colorPrimary);
+
+            item_recyclerview.setAdapter(new GridAdapter());
+        }
+
+
+        private class GridAdapter extends RecyclerView.Adapter<BaseHolder>{
+
+            @Override
+            public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                return new ItemViewHolder(R.layout.item_x2_imageview,parent,viewType);
+            }
+
+            @Override
+            public void onBindViewHolder(BaseHolder holder, int position) {
+                holder.refreshData(data.get(position),position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return data.size();
+            }
+        }
+
+
+    }
+
+
+
+    /**
+     *  通用子条目hodler
+     */
+    private class ItemViewHolder extends BaseHolder<Integer>{
+
+        private ImageView imageview_item;
+
+        public ItemViewHolder(int viewId, ViewGroup parent, int viewType) {
+            super(viewId, parent, viewType);
+            imageview_item = (ImageView) itemView.findViewById(R.id.imageview_item);
+            ViewGroup.LayoutParams layoutParams = imageview_item.getLayoutParams();
+            layoutParams.width = layoutParams.height = screenWidth / 3;
+            imageview_item.setLayoutParams(layoutParams);
+        }
+
+        @Override
+        public void refreshData(Integer data, int position) {
+            super.refreshData(data, position);
+            imageview_item.setBackgroundResource(data);
+        }
+    }
 }
