@@ -15,11 +15,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recylcerview;
 
-    private DataInfor data;
+    private RecyclerView recylcerview;//外层recyclerview
 
-    private int screenWidth;
+    private DataInfor data;//假数据
+
+    private int screenWidth;//屏幕宽度
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * 计算屏幕的宽度
+     */
     private  void basicParamInit() {
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -39,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         screenWidth = metric.widthPixels;
 
     }
+
+    /**
+     * 制造一些假数据
+     */
     private void initData() {
         data = new DataInfor();
         ArrayList<Integer> resourceList =new ArrayList<>();
@@ -56,18 +63,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         recylcerview = (RecyclerView) findViewById(R.id.recylcerview);
-
+        //竖直排列、正向排序
         recylcerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
-
+        //添加了一个灰色背景
         recylcerview.setBackgroundResource(R.color.c_e0e0e2);
-
         recylcerview.setAdapter(new RecyclerViewAdapter());
     }
 
     /**
-     * unit dip to px
+     * 将dp转化为px
      */
     private  int dip2px(float dip) {
         float v = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,getResources().getDisplayMetrics());
@@ -75,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * 外层RecyclerView的Adapter
+     */
     private class RecyclerViewAdapter extends RecyclerView.Adapter<BaseHolder>{
+        //条目样式
         private final int HORIZONTAL_VIEW = 1000;
         private final int VERTICAL_VIEW = 1001;
         private final int GRID_VIEW = 1002;
