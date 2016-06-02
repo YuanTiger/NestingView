@@ -1,3 +1,7 @@
+#效果
+
+<img src="http://upload-images.jianshu.io/upload_images/2153401-8b634e6232192dcd.gif?imageMogr2/auto-orient/strip" />
+
 #原理
 RecyclerView嵌套RecyclerView的条目，项目中可能会经常有这样的需求，但是我们将子条目设置为RecyclerView之后，却显示不出来。自己试了很久，终于找到了原因：**必须先设置子RecylcerView的高度**。你要花精力确定出子RecyclerView里面条目的高度，然后从而确定子RecyclerView的高度，设置给子RecylcerView，这样做RecyclerView就可以正确显示出子ReclyclerView。
 
