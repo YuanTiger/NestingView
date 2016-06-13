@@ -1,4 +1,4 @@
-package com.my;
+package com.my.controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +10,14 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.my.BaseHolder;
+import com.my.DataInfor;
+import com.my.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class RyRyActivity extends AppCompatActivity {
 
 
     private RecyclerView recylcerview;//外层recyclerview
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_ryry);
         basicParamInit();
         initData();
         initRecyclerView();
@@ -158,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             //高度等于＝条目的高度＋ 10dp的间距 ＋ 10dp（为了让条目居中）
             layoutParams.height = screenWidth/3 + dip2px(20);
             hor_recyclerview.setLayoutParams(layoutParams);
-            hor_recyclerview.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL,false));
+            hor_recyclerview.setLayoutManager(new LinearLayoutManager(RyRyActivity.this, LinearLayoutManager.HORIZONTAL,false));
             hor_recyclerview.setBackgroundResource(R.color.colorAccent);
             hor_recyclerview.setAdapter(new HorizontalAdapter());
         }
@@ -205,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             super.refreshData(data, position);
             this.data = data;
             //每行显示3个，水平显示
-            item_recyclerview.setLayoutManager(new GridLayoutManager(MainActivity.this,ONE_LINE_SHOW_NUMBER,LinearLayoutManager.HORIZONTAL,false));
+            item_recyclerview.setLayoutManager(new GridLayoutManager(RyRyActivity.this,ONE_LINE_SHOW_NUMBER,LinearLayoutManager.HORIZONTAL,false));
 
             ViewGroup.LayoutParams layoutParams = item_recyclerview.getLayoutParams();
             //计算行数
