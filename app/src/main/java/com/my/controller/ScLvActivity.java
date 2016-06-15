@@ -90,17 +90,18 @@ public class ScLvActivity extends AppCompatActivity {
                         handler.sendEmptyMessageDelayed(HANDLER_MESSAGE, 3000);
                         break;
                 }
-                Log.i("mengyuan", "scrollState" + scrollState);
+//                Log.i("mengyuan", "scrollState" + scrollState);
 
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.i("mengyuan", "firstVisibleItem" + firstVisibleItem + "::::visibleItemCount" + visibleItemCount + "::::totalItemCount" + totalItemCount);
+//                Log.i("mengyuan", "firstVisibleItem" + firstVisibleItem + "::::visibleItemCount" + visibleItemCount + "::::totalItemCount" + totalItemCount);
                 //如果用户自己切换条目，保存条目下标
                 if (userIsScroll) lastPosition = firstVisibleItem;
             }
         });
+
     }
 
     private class MyAdapter extends BaseAdapter {
