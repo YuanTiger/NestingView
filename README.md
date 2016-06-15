@@ -1,5 +1,5 @@
 #简介
-本项目包含了一些ViewGroup的嵌套使用，包括##RecyclerView嵌套RecylcerView,ScrollView嵌套ListView##,希望可以给大家一些灵感
+本项目包含了一些ViewGroup的嵌套使用，包括**RecyclerView嵌套RecylcerView,ScrollView嵌套ListView**,希望可以给大家一些灵感
 
 #原理
 ###RecyclerView嵌套RecylcerView
