@@ -32,29 +32,8 @@ public class ScLvActivity extends AppCompatActivity {
 
     private MyAdapter adapter;
 
-    private int lastPosition = 0;
-
-    private final int HANDLER_MESSAGE = 888;
-
-    private boolean userIsScroll = false;
 
     private int maxCount = 20;
-
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-//            listView.scrollTo(0, dip2px(300));
-            if (lastPosition < maxCount - 1) {
-                //条目向下移动1个单位
-                listView.setSelection(++lastPosition);
-                //发送一个3秒后的新handler
-                handler.sendEmptyMessageDelayed(HANDLER_MESSAGE, 3000);
-            }
-
-        }
-    };
 
 
     @Override
@@ -66,7 +45,6 @@ public class ScLvActivity extends AppCompatActivity {
 
         initListView();
 
-        handler.sendEmptyMessageDelayed(HANDLER_MESSAGE, 3000);
 
     }
 
@@ -75,33 +53,6 @@ public class ScLvActivity extends AppCompatActivity {
             listView.setAdapter(adapter = new MyAdapter());
         else
             adapter.notifyDataSetChanged();
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case SCROLL_STATE_TOUCH_SCROLL://用户滑动状态
-                        //当用户滑动时，取消handler
-                        userIsScroll = true;
-                        handler.removeMessages(HANDLER_MESSAGE);
-                        break;
-                    case SCROLL_STATE_IDLE://用户手指离开屏幕
-                        //当用户手指离开屏幕时，重新开启自动播放
-                        userIsScroll = false;
-                        handler.sendEmptyMessageDelayed(HANDLER_MESSAGE, 3000);
-                        break;
-                }
-//                Log.i("mengyuan", "scrollState" + scrollState);
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                Log.i("mengyuan", "firstVisibleItem" + firstVisibleItem + "::::visibleItemCount" + visibleItemCount + "::::totalItemCount" + totalItemCount);
-                //如果用户自己切换条目，保存条目下标
-                if (userIsScroll) lastPosition = firstVisibleItem;
-            }
-        });
-
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -123,10 +74,11 @@ public class ScLvActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View inflate = ScLvActivity.this.getLayoutInflater().inflate(R.layout.item_sc_lv, parent, false);
-            TextView textView = (TextView) inflate.findViewById(R.id.tv_0);
+            if (convertView == null) convertView = ScLvActivity.this.getLayoutInflater().inflate(R.layout.item_sc_lv, parent, false);
+
+            TextView textView = (TextView) convertView.findViewById(R.id.tv_0);
             textView.setText("position:" + position + position + position + position + position + position);
-            return inflate;
+            return convertView;
         }
     }
 

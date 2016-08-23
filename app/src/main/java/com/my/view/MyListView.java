@@ -37,10 +37,7 @@ public class MyListView extends ListView {
 
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
-    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -65,14 +62,11 @@ public class MyListView extends ListView {
                 //1、上滑 && 达到顶部
                 //2、下滑 && 达到底部
                 //连在一起就是  ((上滑 && 达到顶部) || (下滑 && 达到底部))
-                if ((moveY - downY > 0 && this.getLastVisiblePosition() == 1) || moveY - downY < 0 && this.getLastVisiblePosition() + 1 == this.getCount())
+                if ((moveY - downY > 0 && this.getChildCount() - this.getLastVisiblePosition() == 1) || moveY - downY < 0 && this.getLastVisiblePosition() + 1 == this.getCount())
                     isCanScroll = false;
 
                 if (isCanScroll) {
                     requestDisallowInterceptTouchEvent(true);
-                } else {
-                    requestDisallowInterceptTouchEvent(false);
-
                 }
                 break;
 
