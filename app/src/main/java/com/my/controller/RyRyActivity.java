@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.my.BaseHolder;
 import com.my.DataInfor;
@@ -120,7 +122,7 @@ public class RyRyActivity extends AppCompatActivity {
             } else if (holder instanceof GridViewHolder) {
                 holder.refreshData(data.gridData, position);
             } else if (holder instanceof ItemViewHolder) {
-                holder.refreshData(data.verticalData.get(position - 2), position - 2);
+                holder.refreshData(data.verticalData.get(position - 2), position);
             }
 
         }
@@ -258,7 +260,7 @@ public class RyRyActivity extends AppCompatActivity {
             super.refreshData(data, position);
             this.data = data;
             //每行显示3个，水平显示
-            item_recyclerview.setLayoutManager(new GridLayoutManager(RyRyActivity.this, ONE_LINE_SHOW_NUMBER, LinearLayoutManager.HORIZONTAL, false));
+            item_recyclerview.setLayoutManager(new GridLayoutManager(RyRyActivity.this, ONE_LINE_SHOW_NUMBER, LinearLayoutManager.VERTICAL, false));
 
             ViewGroup.LayoutParams layoutParams = item_recyclerview.getLayoutParams();
             //计算行数
@@ -314,9 +316,15 @@ public class RyRyActivity extends AppCompatActivity {
         }
 
         @Override
-        public void refreshData(Integer data, int position) {
-            super.refreshData(data, position);
+        public void refreshData(Integer data, final int position) {
             imageview_item.setBackgroundResource(data);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(RyRyActivity.this, "position:" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }
