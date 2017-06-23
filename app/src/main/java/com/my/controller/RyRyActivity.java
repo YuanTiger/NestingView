@@ -198,12 +198,11 @@ public class RyRyActivity extends AppCompatActivity {
         @Override
         public void refreshData(List<Integer> data, int position) {
             this.data = data;
-            ViewGroup.LayoutParams layoutParams = hor_recyclerview.getLayoutParams();
-            //高度等于＝条目的高度＋ 10dp的间距 ＋ 10dp（为了让条目居中）
-            layoutParams.height = screenWidth / 3 + dip2px(20);
-            hor_recyclerview.setLayoutParams(layoutParams);
+            //设置水平RecyclerView水平显示
             hor_recyclerview.setLayoutManager(new LinearLayoutManager(RyRyActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            //设置背景
             hor_recyclerview.setBackgroundResource(R.color.colorAccent);
+            //设置Adapter
             hor_recyclerview.setAdapter(new HorizontalAdapter());
 
         }
@@ -261,19 +260,9 @@ public class RyRyActivity extends AppCompatActivity {
             this.data = data;
             //每行显示3个，水平显示
             item_recyclerview.setLayoutManager(new GridLayoutManager(RyRyActivity.this, ONE_LINE_SHOW_NUMBER, LinearLayoutManager.VERTICAL, false));
-
-            ViewGroup.LayoutParams layoutParams = item_recyclerview.getLayoutParams();
-            //计算行数
-            int lineNumber = data.size() % ONE_LINE_SHOW_NUMBER == 0 ? data.size() / ONE_LINE_SHOW_NUMBER : data.size() / ONE_LINE_SHOW_NUMBER + 1;
-            //计算高度=行数＊每行的高度 ＋(行数－1)＊10dp的margin ＋ 10dp（为了居中）
-            //因为每行显示3个条目，为了保持正方形，那么高度应该是也是宽度/3
-            //高度的计算需要自己好好理解，否则会产生嵌套recyclerView可以滑动的现象
-            layoutParams.height = lineNumber * (screenWidth / 3) + (lineNumber - 1) * dip2px(10) + dip2px(10);
-
-            item_recyclerview.setLayoutParams(layoutParams);
-
+            //设置个背景色
             item_recyclerview.setBackgroundResource(R.color.colorPrimary);
-
+            //设置Adapter
             item_recyclerview.setAdapter(new GridAdapter());
         }
 
