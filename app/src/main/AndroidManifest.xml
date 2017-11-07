@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".controller.RyRyActivity" />
         <activity android:name=".controller.ScLvActivity" />
+        <activity android:name=".controller.LvRyActivity" />
     </application>
 
 </manifest>

@@ -17,18 +17,16 @@ import com.my.R;
  * DESC:
  */
 public class EnterActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button bt_ry_ry;
-    private Button bt_sc_lv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter);
-        bt_ry_ry = (Button) findViewById(R.id.bt_ry_ry);
-        bt_sc_lv = (Button) findViewById(R.id.bt_sc_lv);
 
-        bt_ry_ry.setOnClickListener(this);
-        bt_sc_lv.setOnClickListener(this);
+
+        findViewById(R.id.bt_ry_ry).setOnClickListener(this);
+        findViewById(R.id.bt_lv_ry).setOnClickListener(this);
+        findViewById(R.id.bt_sc_lv).setOnClickListener(this);
     }
 
 
@@ -41,6 +39,9 @@ public class EnterActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.bt_sc_lv:
                 intent = new Intent(this,ScLvActivity.class);
+                break;
+                case R.id.bt_lv_ry:
+                intent = new Intent(this,LvRyActivity.class);
                 break;
         }
         startActivity(intent);

@@ -20,6 +20,10 @@ import com.my.R;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * RecyclerView  嵌套  各种样式的RecyclerView
+ */
 public class RyRyActivity extends AppCompatActivity {
 
 

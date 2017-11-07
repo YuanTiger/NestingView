@@ -24,7 +24,7 @@ import org.w3c.dom.Text;
  * AUTHOR:       Yuan.Meng
  * E-MAIL:       mengyuanzz@126.com
  * CREATE-TIME:  16/6/13/上午10:01
- * DESC:
+ * DESC: ScrollView嵌套滑动ListView
  */
 public class ScLvActivity extends AppCompatActivity {
 
@@ -74,9 +74,11 @@ public class ScLvActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) convertView = ScLvActivity.this.getLayoutInflater().inflate(R.layout.item_sc_lv, parent, false);
+            if (convertView == null){
+                convertView = ScLvActivity.this.getLayoutInflater().inflate(R.layout.item_sc_lv, parent, false);
+            }
 
-            TextView textView = (TextView) convertView.findViewById(R.id.tv_0);
+            TextView textView =  convertView.findViewById(R.id.tv_0);
             textView.setText("position:" + position + position + position + position + position + position);
             return convertView;
         }

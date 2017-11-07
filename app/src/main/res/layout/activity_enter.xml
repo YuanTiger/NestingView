@@ -15,6 +15,11 @@
         android:text="ScrollView嵌套ListView"
         android:layout_width="wrap_content"
         android:layout_height="50dp" />
+    <Button
+        android:id="@+id/bt_lv_ry"
+        android:text="ListView嵌套RecyclerView，滑动到RecyclerView的指定位置"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
