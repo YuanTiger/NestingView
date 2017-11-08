@@ -17,6 +17,26 @@
         android:background="@color/c_e0e0e2">
 
 
+        <EditText
+            android:id="@+id/et_listview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:background="@null"
+            android:hint="ListView的下标"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:background="@null"
+            android:hint="RecyclerView的下标"
+            android:textSize="12sp" />
+
         <Button
             android:id="@+id/bt_srcoll"
             android:layout_width="wrap_content"
